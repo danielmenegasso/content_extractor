@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCRApp", "OCRApp\OCRApp.csproj", "{4375244B-E045-441C-86D1-39FA000302BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4375244B-E045-441C-86D1-39FA000302BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4375244B-E045-441C-86D1-39FA000302BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4375244B-E045-441C-86D1-39FA000302BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4375244B-E045-441C-86D1-39FA000302BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3F8F2D8-67F0-4235-953B-45CB9A337653}
+	EndGlobalSection
+EndGlobal
