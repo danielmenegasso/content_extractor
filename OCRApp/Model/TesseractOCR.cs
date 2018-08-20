@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using ZetaLongPaths;
 
 namespace OCRApp.Model
@@ -85,10 +84,18 @@ namespace OCRApp.Model
                     //throw new Exception("Error. Tesseract stopped with an error code = " + process.ExitCode);
                 }
             }
+            catch (Exception msg)
+            {
+                Console.WriteLine(msg);
+            }
             finally
             {
                 //File.Delete(tempImageFile);
-                File.Delete(tempOutputFile + ".txt");
+                if (File.Exists(tempOutputFile + ".txt"))
+                {
+                    File.Delete(tempOutputFile + ".txt");
+                }
+
                 if (tmpImageFiles != null)
                 {
                     foreach (var img in tmpImageFiles)
@@ -134,12 +141,19 @@ namespace OCRApp.Model
                 }
                 else
                 {
-                    throw new Exception("Error. Tesseract stopped with an error code = " + process.ExitCode);
+                    //throw new Exception("Error. Tesseract stopped with an error code = " + process.ExitCode);
                 }
+            }
+            catch (Exception msg)
+            {
+                Console.WriteLine(msg);
             }
             finally
             {
-                File.Delete(tempOutputFile + ".txt");
+                if (File.Exists(tempOutputFile + ".txt"))
+                {
+                    File.Delete(tempOutputFile + ".txt");
+                }
             }
         }
 

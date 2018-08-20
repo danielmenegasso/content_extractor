@@ -4,6 +4,7 @@ using ZetaLongPaths;
 using OCRApp.Database;
 using OCRApp.Model;
 using System.Threading;
+using System.Linq;
 
 namespace OCRApp
 {
@@ -34,9 +35,11 @@ namespace OCRApp
             {
                 listArquivos = _database.GetArquivosSincronizador();
 
-                Console.WriteLine(DateTime.Now + " - " + $"OCR de arquivos GED_FILA, total:{listArquivos?.Count}");
-
                 //Console.ReadKey();
+
+                listArquivos = listArquivos.Where(arq => arq.IdEntidade > 0).ToList();
+
+                Console.WriteLine(DateTime.Now + " - " + $"OCR de arquivos GED_FILA, total:{listArquivos?.Count}");
 
                 var tmp = _database.GetArquivosEntidade(listArquivos, 1);
 
@@ -48,119 +51,127 @@ namespace OCRApp
                         if (_run == false) break;
 
 
-                        Console.WriteLine(DateTime.Now + " - " + $"OCR de arquivo: {_counter} de :{listArquivos.Count}");
-                        var ext = ZlpFileInfo.FromString(item.CaminhoArquivo).Extension;
-                        if (ext == ".pdf")
-                        {
-                            item.DataProcInicio = DateTime.Now;
-                            Console.WriteLine(item.CaminhoArquivo);
-                            TesseractOCR.ParseText(TesseractPath, item, _language);
-                            item.DataProFim = DateTime.Now;
-                            // Salva o OCR
-                            var result = _database.SalvarConteudo(item);
-                            var resultGedFila = _database.UpdateGedFila(item);
-                            if (result == false || resultGedFila == false)
-                            {
-                                Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
-                            }
-                            else
-                            {
-                                Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
-                            }
-                        }
-                        else if (ext == ".docx")
-                        {
-                            item.DataProcInicio = DateTime.Now;
-                            Console.WriteLine(item.CaminhoArquivo);
-                            TesseractOCR.ParseTextDocx(item);
-                            item.DataProFim = DateTime.Now;
-                            // Salva o OCR
-                            var result = _database.SalvarConteudo(item);
-                            var resultGedFila = _database.UpdateGedFila(item);
-                            if (result == false || resultGedFila == false)
-                            {
-                                Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
-                            }
-                            else
-                            {
-                                Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
-                            }
+                        Console.WriteLine(DateTime.Now + " - " + $"OCR de arquivo: {_counter} de {listArquivos.Count}");
 
-                        }
-                        else if (ext == ".xls" || ext == ".xlsx")
+                        if (ZlpFileInfo.FromString(item.CaminhoArquivo).Exists)
                         {
-                            item.DataProcInicio = DateTime.Now;
-                            Console.WriteLine(item.CaminhoArquivo);
+                            var ext = ZlpFileInfo.FromString(item.CaminhoArquivo).Extension;
+                            if (ext == ".pdf")
+                            {
+                                item.DataProcInicio = DateTime.Now;
+                                Console.WriteLine(item.CaminhoArquivo);
+                                TesseractOCR.ParseText(TesseractPath, item, _language);
+                                item.DataProFim = DateTime.Now;
+                                // Salva o OCR
+                                var result = _database.SalvarConteudo(item);
+                                var resultGedFila = _database.UpdateGedFila(item);
+                                if (result == false || resultGedFila == false)
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
+                                }
+                            }
+                            else if (ext == ".docx")
+                            {
+                                item.DataProcInicio = DateTime.Now;
+                                Console.WriteLine(item.CaminhoArquivo);
+                                TesseractOCR.ParseTextDocx(item);
+                                item.DataProFim = DateTime.Now;
+                                // Salva o OCR
+                                var result = _database.SalvarConteudo(item);
+                                var resultGedFila = _database.UpdateGedFila(item);
+                                if (result == false || resultGedFila == false)
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
+                                }
 
-                            if (ext == ".xls")
-                            {
-                                TesseractOCR.ParseTextXls(item);
                             }
-                            else
+                            else if (ext == ".xls" || ext == ".xlsx")
                             {
-                                TesseractOCR.ParseTextXlsx(item);
-                            }
+                                item.DataProcInicio = DateTime.Now;
+                                Console.WriteLine(item.CaminhoArquivo);
 
-                            item.DataProFim = DateTime.Now;
-                            // Salva o OCR
-                            var result = _database.SalvarConteudo(item);
-                            var resultGedFila = _database.UpdateGedFila(item);
-                            if (result == false || resultGedFila == false)
-                            {
-                                Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
-                            }
-                            else
-                            {
-                                Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
-                            }
+                                if (ext == ".xls")
+                                {
+                                    TesseractOCR.ParseTextXls(item);
+                                }
+                                else
+                                {
+                                    TesseractOCR.ParseTextXlsx(item);
+                                }
 
-                        }
-                        else if (ext == ".txt")
-                        {
-                            item.DataProcInicio = DateTime.Now;
-                            Console.WriteLine(item.CaminhoArquivo);
-                            TesseractOCR.ParseTextTxt(item);
-                            item.DataProFim = DateTime.Now;
-                            // Salva o OCR
-                            var result = _database.SalvarConteudo(item);
-                            var resultGedFila = _database.UpdateGedFila(item);
-                            if (result == false || resultGedFila == false)
+                                item.DataProFim = DateTime.Now;
+                                // Salva o OCR
+                                var result = _database.SalvarConteudo(item);
+                                var resultGedFila = _database.UpdateGedFila(item);
+                                if (result == false || resultGedFila == false)
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
+                                }
+
+                            }
+                            else if (ext == ".txt")
                             {
-                                Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
+                                item.DataProcInicio = DateTime.Now;
+                                Console.WriteLine(item.CaminhoArquivo);
+                                TesseractOCR.ParseTextTxt(item);
+                                item.DataProFim = DateTime.Now;
+                                // Salva o OCR
+                                var result = _database.SalvarConteudo(item);
+                                var resultGedFila = _database.UpdateGedFila(item);
+                                if (result == false || resultGedFila == false)
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
+                                }
+                            }
+                            else if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".tiff")
+                            {
+                                item.DataProcInicio = DateTime.Now;
+                                Console.WriteLine(item.CaminhoArquivo);
+                                TesseractOCR.ParseTextImage(TesseractPath, item, _language);
+                                item.DataProFim = DateTime.Now;
+                                // Salva o OCR
+                                var result = _database.SalvarConteudo(item);
+                                var resultGedFila = _database.UpdateGedFila(item);
+                                if (result == false || resultGedFila == false)
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
+                                }
                             }
                             else
                             {
-                                Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
+                                Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR da extensão: {ext} ainda não suportada, pulando arquivo...");
                             }
-                        }
-                        else if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".tiff")
+                        } else
                         {
-                            item.DataProcInicio = DateTime.Now;
-                            Console.WriteLine(item.CaminhoArquivo);
-                            TesseractOCR.ParseTextImage(TesseractPath, item, _language);
-                            item.DataProFim = DateTime.Now;
-                            // Salva o OCR
-                            var result = _database.SalvarConteudo(item);
-                            var resultGedFila = _database.UpdateGedFila(item);
-                            if (result == false || resultGedFila == false)
-                            {
-                                Console.WriteLine(DateTime.Now + " - " + $"Falha ao salvar OCR do arquivo {item.CaminhoArquivo}");
-                            }
-                            else
-                            {
-                                Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR salva, arquivo {item.CaminhoArquivo}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine(DateTime.Now + " - " + $"Captura de OCR da extensão: {ext} ainda não suportada, pulando arquivo...");
+                            // Remove o arquivo da fila, caso não exista
+                            _database.RemoveGedFila(item);
                         }
                         _counter++;
                     }
                 }
 
-                Console.WriteLine(DateTime.Now + " - OCR de arquivos finalizado, proxima execução será em 1 minuto...");
-                Thread.Sleep(TimeSpan.FromMinutes(1));
+                Console.WriteLine(DateTime.Now + " - OCR de arquivos finalizado, proxima execução será em 5 segundos...");
+                Thread.Sleep(TimeSpan.FromSeconds(5));
             }
 
             Console.WriteLine(DateTime.Now + " - OCR dos arquivos no GED_FILA finalizado! Pressione qualquer tecla para sair...");

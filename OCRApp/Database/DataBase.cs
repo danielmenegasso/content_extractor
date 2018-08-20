@@ -1,11 +1,8 @@
 ﻿using Npgsql;
-using System;
-using OCRApp.Model;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NpgsqlTypes;
+using OCRApp.Model;
+using System;
+using System.Collections.Generic;
 
 namespace OCRApp.Database
 {
@@ -205,7 +202,7 @@ namespace OCRApp.Database
                                         IdGed = int.Parse(reader[1].ToString()),
                                         Etapa = reader[2].ToString(),
                                         Status = int.Parse(reader[3].ToString()),
-                                        IdEntidade = int.Parse(reader[4].ToString()),
+                                        IdEntidade = int.Parse(reader[4].ToString().Equals(string.Empty) ? "0" : reader[4].ToString()),
                                     });
                                 }
                             }
@@ -329,6 +326,34 @@ namespace OCRApp.Database
                         command.Parameters.AddWithValue("@dataInicio", NpgsqlDbType.Timestamp, arquivo.DataProcInicio);
                         command.Parameters.AddWithValue("@dataFim", NpgsqlDbType.Timestamp, arquivo.DataProFim);
                         command.Parameters.AddWithValue("@total", NpgsqlDbType.Double, arquivo.DataProFim.Subtract(arquivo.DataProcInicio).TotalMinutes);
+                        command.Parameters.AddWithValue("@id", NpgsqlDbType.Bigint, arquivo.Id);
+
+                        output = command.ExecuteNonQuery() > 0;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return output;
+
+        }
+
+        public bool RemoveGedFila(Arquivos arquivo)
+        {
+
+            var output = false;
+
+            const string sql = "DELETE FROM ged_fila WHERE id = @id;";
+
+            try
+            {
+                using (var conn = OpenConnectionGenerico())
+                {
+                    using (var command = new NpgsqlCommand(sql, conn))
+                    {
                         command.Parameters.AddWithValue("@id", NpgsqlDbType.Bigint, arquivo.Id);
 
                         output = command.ExecuteNonQuery() > 0;
