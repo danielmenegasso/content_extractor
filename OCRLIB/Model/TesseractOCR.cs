@@ -9,11 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using ZetaLongPaths;
 
-namespace OCRApp.Model
+namespace OCRLIB.Model
 {
-    class TesseractOCR
+    public class TesseractOCR
     {
         private const string _tessPath = "";
 
@@ -205,7 +204,7 @@ namespace OCRApp.Model
 
         public static void ParseTextTxt(Arquivos file)
         {
-            file.Conteudo = ZlpFileInfo.FromString(file.CaminhoArquivo).ReadAllText();
+            file.Conteudo = File.ReadAllText(file.CaminhoArquivo);
             file.QtdPaginas = 1;
         }
     }

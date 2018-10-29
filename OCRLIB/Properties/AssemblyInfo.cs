@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OCRApp")]
+[assembly: AssemblyTitle("OCRLIB")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OCRApp")]
+[assembly: AssemblyProduct("OCRLIB")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4375244b-e045-441c-86d1-39fa000302bd")]
+[assembly: Guid("024e4fd5-c79b-443f-aa12-5c7fd809fcab")]
 
 // Version information for an assembly consists of the following four values:
 //

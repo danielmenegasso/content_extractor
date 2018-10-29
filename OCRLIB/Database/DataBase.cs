@@ -1,12 +1,12 @@
 ﻿using Npgsql;
 using NpgsqlTypes;
-using OCRApp.Model;
+using OCRLIB.Model;
 using System;
 using System.Collections.Generic;
 
-namespace OCRApp.Database
+namespace OCRLIB.Database
 {
-    class DataBase
+    public class DataBase
     {
         private static string _server = "localhost";
         private static string _port = "5432";
@@ -180,7 +180,7 @@ namespace OCRApp.Database
         {
             List<Arquivos> output = null;
 
-            const string sql = "SELECT id, id_ged, etapa, status, id_entidade FROM ged_fila WHERE data_proc_inicio is null";
+            const string sql = "SELECT id, id_ged, etapa, status, id_entidade, data_entrada FROM ged_fila WHERE data_proc_inicio is null";
 
             try
             {
@@ -203,6 +203,7 @@ namespace OCRApp.Database
                                         Etapa = reader[2].ToString(),
                                         Status = int.Parse(reader[3].ToString()),
                                         IdEntidade = int.Parse(reader[4].ToString().Equals(string.Empty) ? "0" : reader[4].ToString()),
+                                        DataEntrada = DateTime.Parse(reader[5].ToString())
                                     });
                                 }
                             }
@@ -221,7 +222,7 @@ namespace OCRApp.Database
         public List<Arquivos> GetArquivosEntidade(List<Arquivos> arquivos, int idEntidade)
         {
             const string sql =
-                "SELECT  (gp.pasta_servidor || g.id || '_' || g.nome_servidor) as \"arquivo\", g.id_usuario, gp.sinc_privado, gp.sinc_publico, gp.sinc_biblioteca FROM ged g JOIN ged_pastas gp ON(g.id_ged_pastas = gp.id) WHERE g.id = @idGed;";
+                "SELECT  (gp.pasta_servidor || g.id || '_' || g.nome_servidor) as \"arquivo\", g.id_usuario, gp.sinc_privado, gp.sinc_publico, gp.sinc_biblioteca FROM ged g JOIN ged_pastas gp ON(g.sinc_id_ged_pastas = gp.id) WHERE g.id = @idGed;";
 
             try
             {
@@ -278,6 +279,7 @@ namespace OCRApp.Database
 
             return arquivos;
         }
+
 
         public bool SalvarConteudo(Arquivos arquivo)
         {

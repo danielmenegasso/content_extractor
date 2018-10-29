@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace OCRApp.Model
+namespace OCRLIB.Model
 {
-    class Arquivos
+    public class Arquivos
     {
         public int Id { get; set; }
         public int IdGed { get; set; }

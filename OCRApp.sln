@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCRApp", "OCRApp\OCRApp.csproj", "{4375244B-E045-441C-86D1-39FA000302BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCRAPP", "OCR_APP\OCRAPP.csproj", "{4A274633-25CE-467C-84A8-32EF921A8921}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCRLIB", "OCRLIB\OCRLIB.csproj", "{024E4FD5-C79B-443F-AA12-5C7FD809FCAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4375244B-E045-441C-86D1-39FA000302BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4375244B-E045-441C-86D1-39FA000302BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4375244B-E045-441C-86D1-39FA000302BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4375244B-E045-441C-86D1-39FA000302BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A274633-25CE-467C-84A8-32EF921A8921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A274633-25CE-467C-84A8-32EF921A8921}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A274633-25CE-467C-84A8-32EF921A8921}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A274633-25CE-467C-84A8-32EF921A8921}.Release|Any CPU.Build.0 = Release|Any CPU
+		{024E4FD5-C79B-443F-AA12-5C7FD809FCAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{024E4FD5-C79B-443F-AA12-5C7FD809FCAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{024E4FD5-C79B-443F-AA12-5C7FD809FCAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{024E4FD5-C79B-443F-AA12-5C7FD809FCAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
