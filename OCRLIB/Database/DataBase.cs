@@ -210,7 +210,6 @@ namespace OCRLIB.Database
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -252,7 +251,6 @@ namespace OCRLIB.Database
                                             var matricula = GetUserUniqueCode(arquivo.IdUsuario);
                                             // Monta caminho privado
                                             arquivo.CaminhoArquivo = string.Format(FtpRootDir, chaveEntidade) + string.Format(DirPrivado, matricula) + reader[0].ToString();
-
                                         } // SINC_PUBLICO = TRUE
                                         else if (bool.Parse(reader[3].ToString()))
                                         {
@@ -280,7 +278,6 @@ namespace OCRLIB.Database
             return arquivos;
         }
 
-
         public bool SalvarConteudo(Arquivos arquivo)
         {
             var output = false;
@@ -303,7 +300,6 @@ namespace OCRLIB.Database
                         output = command.ExecuteNonQuery() > 0;
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -314,7 +310,6 @@ namespace OCRLIB.Database
 
         public bool UpdateGedFila(Arquivos arquivo)
         {
-
             var output = false;
 
             const string sql = "UPDATE ged_fila SET data_proc_inicio = @dataInicio, data_proc_fim = @dataFim, proc_total = @total WHERE id = @id;";
@@ -333,19 +328,16 @@ namespace OCRLIB.Database
                         output = command.ExecuteNonQuery() > 0;
                     }
                 }
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
             return output;
-
         }
 
         public bool RemoveGedFila(Arquivos arquivo)
         {
-
             var output = false;
 
             const string sql = "DELETE FROM ged_fila WHERE id = @id;";
@@ -361,15 +353,12 @@ namespace OCRLIB.Database
                         output = command.ExecuteNonQuery() > 0;
                     }
                 }
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
             return output;
-
         }
-
     }
 }

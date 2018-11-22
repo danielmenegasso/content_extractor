@@ -1,58 +1,38 @@
-﻿using NPOI.HSSF.UserModel;
+﻿using ImageMagick;
+using NPOI.HSSF.UserModel;
 using NPOI.XSSF.UserModel;
 using NPOI.XWPF.UserModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 
 namespace OCRLIB.Model
 {
     public class TesseractOCR
     {
         private const string _tessPath = "";
+        // Necessário de setar a config antesde utilizar qualquer metodo
+        public static Config Config { get; set; }
 
         public static void ParseText(string tesseractPath, Arquivos file, params string[] lang)
         {
             string output = string.Empty;
             // Create new output file for text
-            var tempOutputFile = Path.GetTempPath() + Guid.NewGuid();
+            var tempOutputFile = Path.GetTempPath() + Guid.NewGuid().ToString() + ".txt";
             // Create new tmp file for Image convertion
             //string[] tempImageFiles;
             // Path of tmp image file created by imagick
-            var pageCount = "";
             IEnumerable<string> tmpImageFiles = null;
 
             try
             {
-                using (var webClient = new WebClient())
-                {
-                    //webClient.Headers[HttpRequestHeader.ContentType] = "text/plain";
-                    webClient.Encoding = Encoding.UTF8;
-                    var values = new NameValueCollection();
-                    values["arquivo"] = file.CaminhoArquivo;//;
+                // Cria caminho para imagem convertida
+                var outImage = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
+                var result = ConvertPDFtoImage(file, outImage);
 
-                    var response = webClient.UploadValues("http://localhost/webprev/servicos/php_imagick", values);
+                if (!result) return;
 
-                    var responseString = Encoding.UTF8.GetString(response);
-
-                    pageCount = responseString;
-                }
-
-                if (string.IsNullOrEmpty(pageCount)) return;
-
-
-                file.QtdPaginas = int.Parse(pageCount);
-
-                tmpImageFiles = Directory.GetFiles(@"C:\Windows\Temp", "*.jpg")
-                    .Where(s => s.Contains("converted"));
-
-                // Cria arquivo tmp com os nomes das imagens
-                File.WriteAllLines(@"C:\Windows\Temp\input.txt", tmpImageFiles);
 
                 ProcessStartInfo info = new ProcessStartInfo();
                 info.WorkingDirectory = tesseractPath;
@@ -60,9 +40,9 @@ namespace OCRLIB.Model
                 info.UseShellExecute = false;
                 info.FileName = "cmd.exe";
                 info.Arguments =
-                    "/c tesseract.exe " +
+                    $"/c {Config.TESSERACT_PATH}\tesseract.exe " +
                     // Image file.
-                    @"C:\Windows\Temp\input.txt" + " " +
+                    outImage + " " +
                     // Output file (tesseract add '.txt' at the end)
                     tempOutputFile +
                     // Languages.
@@ -109,7 +89,7 @@ namespace OCRLIB.Model
         {
             string output = string.Empty;
 
-            var tempOutputFile = Path.GetTempPath() + Guid.NewGuid();
+            var tempOutputFile = Path.GetTempPath() + Guid.NewGuid().ToString() + ".txt";
 
             try
             {
@@ -206,6 +186,35 @@ namespace OCRLIB.Model
         {
             file.Conteudo = File.ReadAllText(file.CaminhoArquivo);
             file.QtdPaginas = 1;
+        }
+
+        private static bool ConvertPDFtoImage(Arquivos arquivo, string outputPng)
+        {
+            var output = false;
+            try
+            {
+                using (MagickImageCollection images = new MagickImageCollection())
+                {
+                    // Lê todas as páginas do PDF como uma lista de imagens
+                    images.Read(arquivo.CaminhoArquivo);
+                    // Salva a quantidade de páginas do PDF
+                    arquivo.QtdPaginas = images.Count;
+                    // Renderiza o PDF em páginas concatenadas verticalmente
+                    using (IMagickImage vertical = images.AppendVertically())
+                    {
+                        vertical.Format = MagickFormat.Png;
+                        vertical.Density = new Density(300);
+                        vertical.Write(outputPng);
+                    }
+                    // Caso não ocorra nenhum problema, retorna TRUE
+                    output = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return output;
         }
     }
 }
